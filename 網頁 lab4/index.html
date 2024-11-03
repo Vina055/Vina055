@@ -1,0 +1,81 @@
+<!-- CourseNotes.html -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>課程筆記</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html" style="text-decoration: none; color: inherit;">組合語言課程筆記</a></h1>
+        <nav>
+            <ul>
+                <!-- 去掉首頁字樣 -->
+            </ul>
+        </nav>
+    </header>
+
+    <div id="main-content">
+        <h1>Stack</h1>
+
+        <h2>5.1.1 Runtime <a href="Stack.html">Stack</a></h2>
+        <ul>
+            <li>使用 <a href="ESP.html">ESP</a> 這個暫存器</li>
+            <li>很少直接操作，通常通過指令例如 <a href="call.html">call</a>、<a href="RET.html">RET</a>、<a href="Push.html">Push</a>、<a href="pop.html">pop</a></li>
+        </ul>
+
+        <h2>5.1.2 <a href="PUSH.html">PUSH</a> and <a href="POP.html">POP</a> Instructions</h2>
+        <ol>
+            <li><a href="push.html">push</a>: 加入值</li>
+            <li><a href="pop.html">pop</a>: 取出值</li>
+            <li><a href="pushfd.html">Pushfd</a>、<a href="popfd.html">Popfd</a>: 操作 <a href="EFLAGS.html">[EFLAGS]</a> 暫存器</li>
+            <li><a href="PUSHAD.html">Pushad</a>、<a>Popa</a>: 放 <a>暫存器</a></li>
+            <li><a>PUSHA</a>、<a>POPA</a>: <a>16位元</a> 時使用</li>
+        </ol>
+
+        <h3>範例: 反轉字串</h3>
+        <pre><code class="language-asm">
+; 反轉字串 (RevStr.asm)
+.386
+.model flat,stdcall
+.stack 4096
+ExitProcess PROTO,dwExitCode:DWORD
+
+.data
+ aName BYTE "Abraham Lincoln",0
+ nameSize = ($ - aName) - 1
+
+.code
+main PROC
+
+ ; 將字串推入堆疊
+ mov ecx,nameSize
+ mov esi,0
+
+L1: 
+    movzx eax,aName[esi] ; 獲取字元
+    push eax ; 推入堆疊
+    inc esi
+    loop L1
+
+ ; 反向彈出字元並存回字串
+ mov ecx,nameSize
+ mov esi,0
+
+L2: 
+    pop eax ; 獲取字元
+    mov aName[esi],al ; 存回字串
+    inc esi
+    loop L2
+
+INVOKE ExitProcess,0
+main ENDP
+END main
+</code></pre>
+    </div>
+</body>
+</html>

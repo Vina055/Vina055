@@ -1,0 +1,39 @@
+<!-- Push.html -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Push</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1><a href="index.html" style="text-decoration: none; color: inherit;">組合語言課程筆記</a></h1>
+        <nav>
+            <ul>
+                <!-- 去掉首頁字樣 -->
+            </ul>
+        </nav>
+    </header>
+    <div id="main-content">
+        <h1>Push</h1>
+        <ul>
+            <li>將值放入 <a href="Stack.html">Stack</a></li>
+            <li>過程
+                <ul>
+                    <li>在 <strong>32-bit</strong> 模式下，每次 push 會將 <a href="Esp.html">ESP</a> - 4</li>
+                    <li>將要推入的值複製到 <a href="Esp.html">ESP</a> 指向的位址</li>
+                </ul>
+            </li>
+            <li>運行時堆疊會<strong>向下</strong>生長，所以最新的值會在更低的位址。</li>
+            <li>格式
+                <ul>
+                    <li>接記憶體</li>
+                    <li>PUSH <a>reg</a>/mem16 （mem16 表 <a>16 位元</a>的記憶體位址）</li>
+                    <li>PUSH reg/mem32</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
