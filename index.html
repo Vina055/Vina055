@@ -1,81 +1,136 @@
-<!-- CourseNotes.html -->
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>課程筆記</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="scripts.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Favorites</title>
+    <style>
+        .liked {
+            background-color: yellow; /* 標示為最愛餐廳 */
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1><a href="index.html" style="text-decoration: none; color: inherit;">組合語言課程筆記</a></h1>
-        <nav>
-            <ul>
-                <!-- 去掉首頁字樣 -->
-            </ul>
-        </nav>
+        <button id="show-favorites">Show Favorites</button>
+        <button id="show-menu">Show Menu</button>
     </header>
+    <main>
+        <section id="menu-container">
+            <h2>Restaurant Menu</h2>
+            <div class="restaurant-card" id="restaurant-1">
+                <span>Restaurant 1</span>
+                <button onclick="toggleFavorite('Restaurant 1', 'restaurant-1')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-2">
+                <span>Restaurant 2</span>
+                <button onclick="toggleFavorite('Restaurant 2', 'restaurant-2')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-3">
+                <span>Restaurant 3</span>
+                <button onclick="toggleFavorite('Restaurant 3', 'restaurant-3')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-4">
+                <span>Restaurant 4</span>
+                <button onclick="toggleFavorite('Restaurant 4', 'restaurant-4')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-5">
+                <span>Restaurant 5</span>
+                <button onclick="toggleFavorite('Restaurant 5', 'restaurant-5')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-6">
+                <span>Restaurant 6</span>
+                <button onclick="toggleFavorite('Restaurant 6', 'restaurant-6')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-7">
+                <span>Restaurant 7</span>
+                <button onclick="toggleFavorite('Restaurant 7', 'restaurant-7')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-8">
+                <span>Restaurant 8</span>
+                <button onclick="toggleFavorite('Restaurant 8', 'restaurant-8')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-9">
+                <span>Restaurant 9</span>
+                <button onclick="toggleFavorite('Restaurant 9', 'restaurant-9')">Add to Favorites</button>
+            </div>
+            <div class="restaurant-card" id="restaurant-10">
+                <span>Restaurant 10</span>
+                <button onclick="toggleFavorite('Restaurant 10', 'restaurant-10')">Add to Favorites</button>
+            </div>
+        </section>
 
-    <div id="main-content">
-        <h1>Stack</h1>
+        <section id="favorites-container">
+            <h2>Your Favorite Restaurants</h2>
+            <ul id="favorites-list"></ul>
+            <button id="clear-favorites">Clear All Favorites</button> <!-- 新增清空最愛按鈕 -->
+        </section>
+    </main>
 
-        <h2>5.1.1 Runtime <a href="Stack.html">Stack</a></h2>
-        <ul>
-            <li>使用 <a href="Esp.html">ESP</a> 這個暫存器</li>
-            <li>很少直接操作，通常通過指令例如 <a href="Call.html">CALL</a>、<a href="RET.html">Ret</a>、<a href="Push.html">Push</a>、<a href="Pop.html">pop</a></li>
-        </ul>
+    <script>
+        // Favorites storage in localStorage
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-        <h2>5.1.2 <a href="Push.html">PUSH</a> and <a href="Pop.html">POP</a> Instructions</h2>
-        <ol>
-            <li><a href="Push.html">push</a>: 加入值</li>
-            <li><a href="Pop.html">pop</a>: 取出值</li>
-            <li><a href="Pushfd.html">Pushfd</a>、<a href="Popfd.html">Popfd</a>: 操作 <a href="EFLAGS.html">[EFLAGS]</a> 暫存器</li>
-            <li><a href="PUSHAD.html">Pushad</a>、<a>Popa</a>: 放 <a>暫存器</a></li>
-            <li><a>PUSHA</a>、<a>POPA</a>: <a>16位元</a> 時使用</li>
-        </ol>
+        // Toggle favorite status
+        function toggleFavorite(restaurantName, restaurantId) {
+            const restaurantIndex = favorites.indexOf(restaurantName);
 
-        <h3>範例: 反轉字串</h3>
-        <pre><code class="language-asm">
-; 反轉字串 (RevStr.asm)
-.386
-.model flat,stdcall
-.stack 4096
-ExitProcess PROTO,dwExitCode:DWORD
+            // If restaurant is not in favorites, add it
+            if (restaurantIndex === -1) {
+                favorites.push(restaurantName);
+                document.getElementById(restaurantId).classList.add('liked');
+            } else {
+                // Otherwise, remove it
+                favorites.splice(restaurantIndex, 1);
+                document.getElementById(restaurantId).classList.remove('liked');
+            }
 
-.data
- aName BYTE "Abraham Lincoln",0
- nameSize = ($ - aName) - 1
+            // Update localStorage
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
 
-.code
-main PROC
+        // Show favorites list
+        function showFavorites() {
+            const favoritesContainer = document.getElementById('favorites-container');
+            const favoritesList = document.getElementById('favorites-list');
+            
+            // Show favorite restaurants in the list
+            favoritesList.innerHTML = favorites.map(favorite => {
+                return `<li>${favorite}</li>`;
+            }).join('');
+            favoritesContainer.style.display = 'block';
+            document.getElementById('menu-container').style.display = 'none';
+        }
 
- ; 將字串推入堆疊
- mov ecx,nameSize
- mov esi,0
+        // Show menu
+        function showMenu() {
+            document.getElementById('menu-container').style.display = 'flex';
+            document.getElementById('favorites-container').style.display = 'none';
+        }
 
-L1: 
-    movzx eax,aName[esi] ; 獲取字元
-    push eax ; 推入堆疊
-    inc esi
-    loop L1
+        // Clear all favorites
+        function clearFavorites() {
+            favorites = []; // 清空陣列
+            localStorage.removeItem('favorites'); // 清空 localStorage
+            // 移除所有餐廳的 "liked" 樣式
+            const restaurantCards = document.querySelectorAll('.restaurant-card');
+            restaurantCards.forEach(card => card.classList.remove('liked'));
+            // 更新顯示
+            document.getElementById('favorites-list').innerHTML = ''; 
+        }
 
- ; 反向彈出字元並存回字串
- mov ecx,nameSize
- mov esi,0
+        // Show favorites by default on load
+        document.getElementById('show-favorites').addEventListener('click', showFavorites);
+        document.getElementById('show-menu').addEventListener('click', showMenu);
+        document.getElementById('clear-favorites').addEventListener('click', clearFavorites); // 綁定清空最愛事件
 
-L2: 
-    pop eax ; 獲取字元
-    mov aName[esi],al ; 存回字串
-    inc esi
-    loop L2
-
-INVOKE ExitProcess,0
-main ENDP
-END main
-</code></pre>
-    </div>
+        // Add liked class to already favorited restaurants on page load
+        favorites.forEach(favorite => {
+            const restaurantCard = document.getElementById(`restaurant-${favorite}`);
+            if (restaurantCard) {
+                restaurantCard.classList.add('liked');
+            }
+        });
+    </script>
 </body>
 </html>
